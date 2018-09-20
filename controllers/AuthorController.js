@@ -4,6 +4,31 @@ const bcrypt = require('bcrypt')
 const Op = require('sequelize').Op
 
 module.exports = {
+    all : (req, res) => {
+        models.Author.all({
+          attributes: ['id','name'],
+        })
+        .then((author) => {
+          let data = []
+          author.forEach((authors) => {
+            data.push({
+              value : authors.id,
+              label : authors.name
+            })
+          })
+          res.status(200).json({
+            message: 'Success Read Author!',
+            data : data
+          })
+        })
+        .catch((err) => {
+          res.status(500).json({
+            message: 'Fail Read Author!',
+            errors : err
+          })
+        })
+    },
+
     index : (req,res) => {
         models.Author.count().then((total) => {
 
@@ -18,7 +43,7 @@ module.exports = {
             prev_page === 0 ? offset = 0 : offset = prev_page * per_page
             count_page > total ? next_page = null : next_page = parseInt(page) + 1
 
-            models.Author.findAll({
+            models.Author.all({
               attributes: ['id','name'],
               offset : offset, limit : per_page
             }).then((author) => {
@@ -69,7 +94,7 @@ module.exports = {
             prev_page === 0 ? offset = 0 : offset = prev_page * per_page
             count_page > total ? next_page = null : next_page = parseInt(page) + 1
 
-            models.Author.findAll({
+            models.Author.all({
               attributes: ['id','name'],
               where: {
                   [Op.or]: [

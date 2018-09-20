@@ -8,10 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Book.associate = function(models) {
     models.Book.belongsTo(models.Author,{
-      onDELETE: "CASCADE",
-      foreignKey: {
-        allowNull: false
-      }
+      foreignKey: 'author_id'
     })
   };
   return Book;
